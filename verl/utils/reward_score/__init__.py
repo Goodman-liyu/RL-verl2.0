@@ -36,6 +36,12 @@ def _default_compute_score(data_source, solution_str, ground_truth):
     elif "dialogsum" in data_source:
         from . import dialogsum
         res = dialogsum.compute_score(solution_str, ground_truth)
+    elif "countdown" in data_source:
+        from . import countdown
+        res = countdown.compute_score(solution_str, ground_truth, format_score=0.0)
+    elif "zebra" in data_source:
+        from . import zebra
+        res = zebra.compute_score(solution_str, ground_truth, format_score=0.0)
     else:
         raise NotImplementedError
 
