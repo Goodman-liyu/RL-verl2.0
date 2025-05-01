@@ -13,5 +13,10 @@ export VLLM_ATTENTION_BACKEND=XFORMERS
 export LOG_FILE=log/${DataName}_7b_math.log
 export PROJECT_NAME=Nips
 
+pkill sft_lr
+ray stop
+ray start --head
+#--port=$RAY_PORT --temp-dir=$TEMP_DIR
+sleep 1
 
 bash examples/grpo_trainer/run_qwen2-7b.sh
