@@ -106,6 +106,8 @@ class LLM(LLM):
         load_format="auto",
         **kwargs,
     ) -> None:
+        print('*'*50)
+        print(swap_space)
         if "disable_log_stats" not in kwargs:
             kwargs["disable_log_stats"] = True
         removed_vision_keys = ("image_token_id", "image_feature_size", "image_input_shape", "image_input_type")

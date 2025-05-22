@@ -18,15 +18,20 @@ def _default_compute_score(data_source, solution_str, ground_truth):
     if data_source == 'openai/gsm8k':
         from . import gsm8k
         res = gsm8k.compute_score(solution_str, ground_truth)
-    elif data_source in ['lighteval/MATH', 'DigitalLearningGmbH/MATH-lighteval']:
-        from . import math
-        res = math.compute_score(solution_str, ground_truth)
+    elif data_source in ['lighteval/MATH', 'DigitalLearningGmbH/MATH-lighteval','math8k', 'math500','AIME','deepscaler']:
+        # from . import math
+        # res = math.compute_score(solution_str, ground_truth)
+        from . import hf_math_verify
+        res = hf_math_verify.compute_score(solution_str, ground_truth)
     elif data_source in [
             'numina_aops_forum', 'numina_synthetic_math', 'numina_amc_aime', 'numina_synthetic_amc', 'numina_cn_k12',
             'numina_olympiads'
     ]:
         from . import prime_math
         res = prime_math.compute_score(solution_str, ground_truth)
+    elif "countdown" in data_source:
+        from . import countdown
+        res = countdown.compute_score(solution_str, ground_truth, format_score=0.0)
     elif data_source in ['codecontests', 'apps', 'codeforces', 'taco']:
         from . import prime_code
         res = prime_code.compute_score(solution_str, ground_truth, continuous=True)
@@ -43,3 +48,21 @@ def _default_compute_score(data_source, solution_str, ground_truth):
         return float(res)
     else:
         return float(res[0])
+
+
+def _select_rm_score_fn(data_source):
+    if data_source == 'openai/gsm8k':
+        return gsm8k.compute_score
+    elif data_source in ['lighteval/MATH','math8k', 'math500','AIME','deepscaler']:
+        # return math.compute_score
+        return hf_math_verify.compute_score
+    elif "multiply" in data_source or "arithmetic" in data_source:
+        return multiply.compute_score
+    elif "countdown" in data_source:
+        return countdown.compute_score
+    elif "kk" in data_source:
+        return kk.compute_score
+    elif "dialogsum" in data_source:
+        return dialogsum.compute_score
+    else:
+        raise NotImplementedError
